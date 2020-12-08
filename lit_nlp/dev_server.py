@@ -79,8 +79,8 @@ class Server(object):
     served by this module.
 
     Returns:
-      WSGI app if the server type is 'external', otherwise None when
-      serving is complete.
+      WSGI app if the server type is 'external', server if the server type
+      is 'notebook', otherwise None when serving is complete.
     """
     while True:
       logging.info(get_lit_logo())
@@ -104,6 +104,8 @@ class Server(object):
       # The underlying TSServer registers a SIGINT handler,
       # so if you hit Ctrl+C it will return.
       server.serve()
+      if self._server_type == 'notebook':
+        return server
       app.save_cache()
       # Optionally, reload server for development.
       # Potentially brittle - don't use this for real deployments.
